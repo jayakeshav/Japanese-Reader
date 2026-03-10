@@ -337,20 +337,46 @@ def lookup_word_meaning(word: str) -> str:
 
 def main() -> None:
     st.title("Japanese Reader")
-    st.write("Upload a Japanese `.txt` file and view Romaji plus optional English translation.")
+    st.write("Upload or paste Japanese text and view Romaji plus optional English translation.")
     st.caption("Run on local network: `python3 -m streamlit run app.py --server.address 0.0.0.0`")
 
-    uploaded_file = st.file_uploader("Upload a text file", type=["txt"])
+    input_mode = st.radio("Input source", ["Paste text", "Upload .txt file"], horizontal=True)
 
-    if not uploaded_file:
-        st.info("Please upload a `.txt` file to begin.")
-        return
+    text = ""
+    if input_mode == "Upload .txt file":
+        uploaded_file = st.file_uploader("Upload a text file", type=["txt"])
+        if not uploaded_file:
+            st.info("Please upload a `.txt` file to begin.")
+            return
+        raw = uploaded_file.getvalue()
+        text = decode_uploaded_text(raw)
+    else:
+        with st.form("paste_text_form", clear_on_submit=False):
+            text = st.text_area(
+                "Paste Japanese text",
+                height=220,
+                placeholder="Paste Japanese text here...",
+            )
+            start_requested = st.form_submit_button("Start Translating")
 
-    raw = uploaded_file.getvalue()
-    text = decode_uploaded_text(raw)
+        if text.strip():
+            st.download_button(
+                "Download pasted text (.txt)",
+                data=text,
+                file_name="pasted_japanese_text.txt",
+                mime="text/plain",
+            )
+
+        if not start_requested:
+            st.info("Paste text and tap 'Start Translating'.")
+            return
+
+        if not text.strip():
+            st.warning("Please paste Japanese text before starting.")
+            return
 
     if not text.strip():
-        st.warning("The uploaded file appears to be empty.")
+        st.warning("The provided text appears to be empty.")
         return
 
     try:
