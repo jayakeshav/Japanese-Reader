@@ -270,7 +270,7 @@ def build_reader_html(text: str, tagger: fugashi.Tagger, converter: Any, show_tr
             blocks.append("<div class='line-block'><br></div>")
             continue
 
-        ruby_line = render_ruby_line(line, tagger, converter, show_inline_meaning=True)
+        ruby_line = render_ruby_line(line, tagger, converter, show_inline_meaning=False)
         translation = translate_line(line) if show_translation else None
         blocks.append(build_line_block(ruby_line, translation))
 
@@ -385,7 +385,7 @@ def main() -> None:
             if not line.strip():
                 blocks.append("<div class='line-block'><br></div>")
             else:
-                ruby_line = render_ruby_line(line, tagger, converter, show_inline_meaning=True)
+                ruby_line = render_ruby_line(line, tagger, converter, show_inline_meaning=False)
                 translation = translate_line(line)
                 blocks.append(build_line_block(ruby_line, translation))
 
@@ -407,7 +407,7 @@ def main() -> None:
             "`python3 -m pip install --user deep-translator`"
         )
 
-    st.caption("Hover over Kanji words to see in-place meanings.")
+    st.caption("Inline word meaning is currently turned off.")
 
 
 if __name__ == "__main__":
