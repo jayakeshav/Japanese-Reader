@@ -1,0 +1,6 @@
+streamlit>=1.52.0
+fugashi>=1.5.2
+mecab-python3>=1.0.12
+pykakasi>=2.3.0
+unidic-lite>=1.0.8
+deep-translator>=1.11.4
